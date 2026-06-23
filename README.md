@@ -1,128 +1,218 @@
-[Google Maps Reviews Scraper](https://apify.com/scrape.badger/google-maps-reviews-scraper?fpr=data)
+[Google Maps Reviews Scraper](https://apify.com/memo23/google-maps-reviews-scraper?fpr=data)
 
-## What does Google Maps Reviews Scraper do?
+## Overview
 
-Scrape reviews for many Google Maps places in a single Apify run. Reviews-only micro-actor — accepts one OR many `place_ids` / `data_ids`, with sort order and topic filter.
+Extract all reviews of Google Maps places using place URLs. Get review text, published date, response from owner, review URL, and reviewer's details. Download scraped data, run the scraper via API, schedule and monitor runs or integrate with other tools.
 
-## Why use Google Maps Reviews Scraper?
+This **Google Maps Reviews Scraper** is a specialized tool designed to extract comprehensive reviews from [Google Maps](https://www.google.com/maps), the world's leading navigation and business listing platform. This scraper delivers rich, structured data encompassing every critical aspect of user reviews to support sentiment analysis, market research, and reputation management.
 
-- **Batch input.** Paste a list of place_ids (one per line or comma-separated) — no need to configure a separate task per place.
-- **Sort & filter.** `mostRelevant` / `newestFirst` / `highestRating` / `lowestRating` + optional topic keyword filter.
-- **Per-place pagination budget.** `max_pages_per_place` (1-50) caps credit spend when batching many places.
-- **Single-purpose UI.** No `mode` dropdown, no fields you'd never use — just reviews.
-- **Cheapest reviews-only actor on Apify.** $0.30 / 1k reviews — see benchmark.
+With this scraper, users gain access to **detailed review information** including ratings, text content, author details, and published dates. The tool captures **comprehensive metadata** with full details about the reviewer and the review context.
 
-## What data can Google Maps Reviews Scraper extract?
+**Review specifications** are thoroughly extracted, including review text, star ratings, language detection, and attached images. Author information provides additional context about the reviewer's credibility.
 
-| Field | Type | Description |
-| --- | --- | --- |
-| place_id | string | Source place ID (stamped onto every review for correlation) |
-| author | string | Reviewer display name |
-| author_url | string | Reviewer Google profile |
-| rating | number | Star rating (1-5) |
-| published_at | string | ISO 8601 timestamp |
-| text | string | Review body |
-| topics | array | Google-extracted topic tags |
-| likes | number | Helpful votes |
-| owner_response | object | Merchant reply (text + timestamp), when present |
+The scraper excels at capturing **review details**, including review IDs, publication times, edit history, and visual content for comprehensive analysis.
 
-## How to scrape Google Maps
+Additional **metadata and classification** includes geolocation of images and author profile links for deep-dive investigations.
 
-1. Click **Try for free**.
-2. Paste one or many Google Place IDs into the **Place IDs** box (one per line, or comma-separated).
-3. Optional: set `sort_by`, `topic_id`, `gl`, `hl`.
-4. Set `max_pages_per_place` — each page ≈ 10 reviews.
-5. Click **Start** — reviews stream into the dataset, tagged with the source place_id.
+Whether you're a business owner monitoring reputation, a marketer analyzing customer feedback, or a data scientist performing sentiment analysis, this scraper provides the complete, structured dataset needed for professional-grade insights.
 
-## How much will it cost?
+---
 
-**$0.003 per review page (≈ $0.30 per 1,000 reviews).** One credit-equivalent per API call; each page returns ≈ 10 reviews. Batching 100 places at `max_pages_per_place: 3` = 300 calls = $0.90.
+## Features
 
-### Competitor benchmark
+- **Smart Review Extraction**:
 
-| Actor | Author | Price | Notes |
-| --- | --- | --- | --- |
-| compass/google-maps-reviews-scraper | Compass | ~$7 / 1k places (reviews bundled) | Reviews come with full place crawl |
-| apify/google-maps-reviews-scraper | Apify | ~$0.60 / 1k reviews | Official Apify actor |
-| lukas_krivka/google-reviews-scraper | Lukas Krivka | ~$0.40 / 1k reviews | Community favourite |
-| **scrape-badger/google-maps-reviews-scraper** | **ScrapeBadger** | **$0.30 / 1k reviews** | **Batch place_ids + topic filter** |
+- Automatically handles infinite scrolling and pagination
+- Extracts both text and rating-only reviews
+- **Comprehensive Review Data**:
 
-## Input
+- Extracts review text, star ratings, and publication dates
+- Captures author names, profile IDs, and profile URLs
+- Includes review images with high-resolution URLs and captions
+- **Efficient Data Extraction**:
 
-Configure the run in the **Input** tab above, or pass a JSON object matching the fields below when calling the Actor via the Apify API.
+- Optimized for speed and reliability using lightweight requests
+- Automatically retries failed requests for seamless scraping
+- Handles Google's dynamic loading mechanisms
+- **Rich Metadata**:
 
-| Field | Required | Description |
-| --- | --- | --- |
-| place_ids | ✅ (or `data_ids`) | One place ID per line, or comma-separated. |
-| data_ids | ✅ (or `place_ids`) | Alternative: one data_id per line. |
-| sort_by | — | `mostRelevant` / `newestFirst` / `highestRating` / `lowestRating`. |
-| topic_id | — | Topic keyword (`service`, `food`, `atmosphere` …). |
-| gl / hl | — | Country + language. |
-| max_pages_per_place | — | 1-50, default 5. |
+- Extracts language information for each review
+- Provides precise timestamps for publication and last edits
+- Captures geolocation data from review images where available
+- **Dual Data Sources**:
 
-## Output
+- Primary: Live review data from current place listings
+- Fallback: Historical data accessible through deep scrolling
 
-Every successful run streams records into the run's dataset. Download as JSON, CSV, XML, Excel, or HTML from the **Dataset** tab; consume programmatically via the Apify API or webhooks.
+---
 
-Example record:
+## How to Use
+
+1. **Set Up**: Ensure you have an Apify account and access to the Apify platform.
+2. **Provide Input Data**: Input specific scraping parameters, such as the Google Maps Place URL.
+3. **Adjust Scraper Settings**: Configure settings like `maxItems`, `maxConcurrency`, and `proxy` to optimize performance.
+4. **Run the Scraper**: Execute the scraper on the Apify platform.
+5. **Download Results**: Export the scraped review data in your preferred format (JSON, CSV, Excel).
+
+### Usage Limitations
+
+**Free Users**: Non-paying users are limited to scraping **10 reviews** per run and can only use **1 start URL**. To access unlimited scraping and all features, please upgrade to a paid Apify account.
+
+**Paid Users**: Enjoy unlimited review scraping, multiple start URLs, and full access to all scraper features.
+
+---
+
+## Input Configuration
+
+To use the scraper, configure the input parameters as follows:
 
 ```
 {
-  "place_id": "ChIJ_3Su08fj5UYRkFfNoiuWQUk",
-  "author": "Jane Doe",
-  "rating": 5,
-  "published_at": "2026-04-15T10:23:00Z",
-  "text": "Best flat white in midtown. Staff remembered my name on visit two.",
-  "topics": [
-    "coffee",
-    "atmosphere"
-  ],
-  "likes": 3,
-  "owner_response": {
-    "text": "Thanks, Jane!",
-    "published_at": "2026-04-16T09:00:00Z"
-  }
+    "startUrls": [
+        {
+            "url": "https://www.google.com/maps/place/Eiffel+Tower/@48.8583701,2.2944813,17z/data=!3m1!4b1!4m6!3m5!1s0x47e66e2964e34e2d:0x8ddca9ee380ef7e0!8m2!3d48.8583701!4d2.2944813!16zL20vMDJqODE?entry=ttu"
+        }
+    ],
+    "maxItems": 100,
+    "maxConcurrency": 10,
+    "minConcurrency": 1,
+    "maxRequestRetries": 3,
+    "sort": "newest",
+    "proxy": {
+        "useApifyProxy": true
+    }
 }
 ```
 
-## Tips / Advanced options
+### Input Fields Explanation
 
-- **Pipe from `google-maps-scraper`.** Run Search Places first, copy the `place_id` column, paste here.
-- **Use `sort_by: newestFirst` for monitoring.** Set on a daily cron to catch new reviews.
-- **`topic_id` is case-sensitive.** Use the exact topic string Google surfaced in its own topic chips.
-- **Failed places are stamped, not hidden.** A not-found place emits one `{status: empty, reason: not_found}` record — easy to filter out downstream.
+- **Start URLs** (`startUrls`): The URLs from which the scraper will begin extracting data. The scraper accepts:
 
-## FAQ, Disclaimers, Support
+- **Place URLs**: Direct links to specific Google Maps places (e.g., `https://www.google.com/maps/place/...`)
+- **Review Detail URLs**: Direct links to specific reviews (e.g., `https://www.google.com/maps/reviews/...`)
+- **Shortened URLs**: Google Maps mobile short links (e.g., `https://maps.app.goo.gl/...`)
+- **Max Items** (`maxItems`): Maximum number of reviews to scrape per run. Default is `100`.
+- **Max Concurrency** (`maxConcurrency`): Maximum number of pages processed simultaneously. Default is `10`.
+- **Min Concurrency** (`minConcurrency`): Minimum number of pages processed simultaneously. Default is `1`.
+- **Max Request Retries** (`maxRequestRetries`): Number of retries for failed requests. Default is `3`.
+- **Sort Reviews** (`sort`): Sort order for the reviews. Options: `mostRelevant`, `newest`, `highestRating`, `lowestRating`. Default is `newest`.
+- **Language** (`language`): Language code for the reviews (e.g., 'en', 'de', 'es', 'fr'). Default is `en`.
+- **Proxy Configuration** (`proxy`): Settings for reliable and anonymous scraping. Default uses Apify's Proxy.
 
-### Can I use place URLs instead of IDs?
+---
 
-Not directly — extract the `ChIJ…` or `0x…:0x…` segment from the URL first. `google-maps-scraper` Search Places mode returns both.
+## Output Structure
 
-### What's the max batch size?
+The scraper produces a structured JSON output containing detailed information for each review.
 
-Apify's own runtime limits apply (memory, disk). ≈ 500-1000 places per run is comfortable at 256 MB; more than that, chunk into multiple runs.
+```
+{
+  "review_id": "ChdDSUhN...",
+  "review_url": "https://www.google.com/maps/reviews/data=!4m6!14m5!1m4!2m3!1sChdDSUhN...!2m1!1s0x...",
+  "time_published": "2 months ago",
+  "time_last_edited": null,
+  "author_name": "John Doe",
+  "author_profile_url": "https://www.google.com/maps/contrib/...",
+  "author_url": "https://www.google.com/maps/contrib/...",
+  "author_id": "101012477810529771534",
+  "rating": 5,
+  "review_text": "Amazing experience! The view was breathtaking.",
+  "review_language": "en",
+  "images": [
+    {
+      "id": "...",
+      "url": "https://lh3.googleusercontent.com/...",
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "location": {
+        "friendly": "Paris, France",
+        "lat": 48.8584,
+        "long": 2.2945
+      },
+      "caption": "View from the top"
+    }
+  ],
+  "source": "Google",
+  "scrapedAt": "2025-01-01T12:00:00.000Z",
+  "originalSearchUrl": "https://www.google.com/maps/place/..."
+}
+```
 
-### Does this include owner responses?
+### Field Descriptions
 
-Yes, when Google returns them, as the `owner_response` field.
+#### General Information
 
-### Why stamp the place_id on each review?
+- **review_id**: Unique identifier for the review.
+- **scrapedAt**: Timestamp when the data was extracted.
+- **originalSearchUrl**: The URL of the place being scraped.
+- **source**: The source of the review (e.g., "Google").
 
-So you can group / correlate downstream when the dataset mixes reviews from many places.
+#### Time Information
 
-### Disclaimer
+- **time_published**: Relative time string indicating when the review was posted (e.g., "2 months ago").
+- **time_last_edited**: Relative time string indicating when the review was last edited (null if never edited).
 
-This Actor scrapes public Google data only. You're responsible for compliance with Google's Terms of Service and any applicable data-protection laws (GDPR, CCPA, etc.) in your jurisdiction. ScrapeBadger does not store the scraped results — they are delivered directly to your Apify dataset.
+#### Author Information
 
-### Support
+- **author_name**: The name of the reviewer.
+- **author_id**: Unique numeric identifier for the reviewer.
+- **author_profile_url**: Direct link to the reviewer's Google Maps profile.
+- **author_url**: Alternative link to the reviewer's profile.
 
-Something not working? Open a ticket in the **Issues** tab above — we triage within one business day. Full API reference: [docs.scrapebadger.com](https://docs.scrapebadger.com).
+#### Review Content
 
-### Related Actors
+- **rating**: Numeric rating given by the reviewer (1-5 stars).
+- **review_text**: The actual text content of the review (can be null for rating-only reviews).
+- **review_language**: Detected language code of the review text (e.g., "en").
 
-- [`google-maps-scraper`](https://apify.com/scrape-badger/google-maps-scraper) — Full multi-mode (search + place + reviews + photos + posts)
-- [`google-maps-photos-scraper`](https://apify.com/scrape-badger/google-maps-photos-scraper) — Photos-only twin of this actor
+#### Visual Content
 
-### Powered by
+- **images**: Array of images attached to the review.
 
-[ScrapeBadger](https://scrapebadger.com) — Google-optimised residential proxy pool + browser-farm fallback, 99.7% uptime, unmetered bandwidth. No CAPTCHAs reach you.
+- **id**: Unique identifier for the image.
+- **url**: Direct link to the full-resolution image.
+- **size**: Object containing `width` and `height` of the image.
+- **location**: Object containing `lat`, `long`, and `friendly` name of the image location.
+- **caption**: Caption provided for the image (if any).
+
+---
+
+## Benefits of the Google Maps Reviews Scraper
+
+- **Automated Data Collection**: Saves hours of manual copy-pasting and screenshots.
+- **High-Quality Data**: Delivers structured, machine-readable JSON for immediate analysis.
+- **Scalable Solution**: Capable of scraping thousands of reviews from multiple locations.
+- **Sentiment Analysis Ready**: Provides clean text and rating data suitable for NLP models.
+- **Reliable Performance**: Built-in retry mechanisms and proxy support ensure consistent results.
+
+---
+
+## Why Choose the Google Maps Reviews Scraper?
+
+The Google Maps Reviews Scraper is an indispensable tool for market researchers, business analysts, and reputation managers. It streamlines the process of gathering customer feedback from one of the world's most trusted sources, enabling you to make data-driven decisions to improve your products and services.
+
+---
+
+## Explore More Scrapers
+
+If you found the Google Maps Reviews Scraper useful, check out other powerful scrapers and actors at [memo23's Apify profile](https://apify.com/memo23). We offer a wide range of tools to enhance your web scraping and automation needs.
+
+---
+
+## Support
+
+- For issues or feature requests, please use the [Issues](https://console.apify.com/actors/ftbw0YFo17iTQ2qjv/issues) section of this actor.
+- For further assistance, contact the author:
+
+- Author's website: [https://muhamed-didovic.github.io/](https://muhamed-didovic.github.io/)
+- Email: [muhamed.didovic@gmail.com](mailto:muhamed.didovic@gmail.com)
+
+---
+
+## Additional Services
+
+- Request customization or a full dataset: [muhamed.didovic@gmail.com](mailto:muhamed.didovic@gmail.com)
+- Need other platforms scraped? Contact [muhamed.didovic@gmail.com](mailto:muhamed.didovic@gmail.com)
+- For API services of this scraper, reach out to [muhamed.didovic@gmail.com](mailto:muhamed.didovic@gmail.com)
